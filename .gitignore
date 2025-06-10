@@ -1,0 +1,7 @@
+.venv/
+.env
+.idea/
+pyrightconfig.json
+.pg_service.conf
+.erp_pgpass
+
