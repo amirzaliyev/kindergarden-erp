@@ -1,12 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uz">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bog'cha Boshqaruv Tizimi - Kirish</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <style>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bog'cha Boshqaruv Tizimi - Kirish</title>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <style>
+        {% block styles %}
+        
         * {
             margin: 0;
             padding: 0;
@@ -201,7 +203,6 @@
         .form-container {
             position: relative;
             height: 600px;
-            overflow: hidden;
         }
 
         .form-panel {
@@ -515,277 +516,37 @@
                 box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
             }
         }
-    </style>
-</head>
-
-<body>
-    <!-- Animated Background -->
-    <div class="background-animation">
-        <div class="floating-shapes">
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div class="auth-container">
-        <!-- Header -->
-        <div class="auth-header">
-            <div class="logo-icon">
-                <i class="fas fa-seedling"></i>
-            </div>
-            <h1 class="auth-title">Bog'cha Tizimi</h1>
-            <p class="auth-subtitle">Boshqaruv Paneli</p>
-        </div>
-
-        <!-- Form Container -->
-        <div class="form-container">
-            <!-- Login Form -->
-            <div class="form-panel login" id="loginPanel">
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-user" style="margin-right: 5px"></i>
-                            Foydalanuvchi nomi
-                        </label>
-                        <input type="text" class="form-input" id="loginUsername"
-                            placeholder="Foydalanuvchi nomingizni kiriting" required />
-                        <i class="fas fa-user input-icon"></i>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-lock" style="margin-right: 5px"></i>
-                            Parol
-                        </label>
-                        <input type="password" class="form-input" id="loginPassword" placeholder="Parolingizni kiriting"
-                            required />
-                        <i class="fas fa-lock input-icon"></i>
-                    </div>
-
-                    <div class="remember-me">
-                        <input type="checkbox" id="rememberMe" />
-                        <label for="rememberMe">Meni eslab qol</label>
-                    </div>
-
-                    <div class="forgot-password">
-                        <a href="#" onclick="showForgotPassword()">Parolni unutdingizmi?</a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary pulse">
-                        <i class="fas fa-sign-in-alt" style="margin-right: 8px"></i>
-                        Kirish
-                    </button>
-
-                    <div class="switch-form">
-                        <p>
-                            Hisobingiz yo'qmi?
-                            <button type="button" class="switch-btn" onclick="switchToRegister()">
-                                Ro'yxatdan o'tish
-                            </button>
-                        </p>
-                    </div>
-                </form>
-
-                <!-- Loading Animation -->
-                <div class="loading" id="loginLoading">
-                    <div class="spinner"></div>
-                </div>
-
-                <!-- Success Message -->
-                <div class="success-message" id="loginSuccess">
-                    <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <p>Muvaffaqiyatli kirildi!</p>
-                    <p>Boshqaruv paneliga yo'naltirilmoqda...</p>
-                </div>
-            </div>
-
-            <!-- Register Form -->
-            <div class="form-panel register" id="registerPanel">
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-user" style="margin-right: 5px"></i>
-                            To'liq ism
-                        </label>
-                        <input type="text" class="form-input" id="registerFullName"
-                            placeholder="To'liq ismingizni kiriting" required />
-                        <i class="fas fa-user input-icon"></i>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-envelope" style="margin-right: 5px"></i>
-                            Email
-                        </label>
-                        <input type="email" class="form-input" id="registerEmail"
-                            placeholder="Email manzilingizni kiriting" required />
-                        <i class="fas fa-envelope input-icon"></i>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-lock" style="margin-right: 5px"></i>
-                            Parol
-                        </label>
-                        <input type="password" class="form-input" id="registerPassword" placeholder="Parol yarating"
-                            required />
-                        <i class="fas fa-lock input-icon"></i>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-lock" style="margin-right: 5px"></i>
-                            Parolni tasdiqlash
-                        </label>
-                        <input type="password" class="form-input" id="confirmPassword"
-                            placeholder="Parolni qayta kiriting" required />
-                        <i class="fas fa-lock input-icon"></i>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-user-plus" style="margin-right: 8px"></i>
-                        Ro'yxatdan o'tish
-                    </button>
-
-                    <div class="switch-form">
-                        <p>
-                            Hisobingiz bormi?
-                            <button type="button" class="switch-btn" onclick="switchToLogin()">
-                                Kirish
-                            </button>
-                        </p>
-                    </div>
-                </form>
-
-                <!-- Loading Animation -->
-                <div class="loading" id="registerLoading">
-                    <div class="spinner"></div>
-                </div>
-
-                <!-- Success Message -->
-                <div class="success-message" id="registerSuccess">
-                    <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <p>Ro'yxatdan o'tish muvaffaqiyatli!</p>
-                    <p>Endi tizimga kirishingiz mumkin.</p>
-                </div>
+            {% endblock styles %}
+        </style>
+    </head>
+    <body>
+        <!-- Animated Background -->
+        <div class="background-animation">
+            <div class="floating-shapes">
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
             </div>
         </div>
-    </div>
-
-    <script>
-        // Form switching animations
-        function switchToRegister() {
-            const loginPanel = document.getElementById("loginPanel");
-            const registerPanel = document.getElementById("registerPanel");
-
-            loginPanel.classList.add("slide-out");
-            registerPanel.classList.add("slide-in");
-
-            setTimeout(() => {
-                loginPanel.style.display = "none";
-                registerPanel.style.display = "block";
-            }, 300);
-        }
-
-        function switchToLogin() {
-            const loginPanel = document.getElementById("loginPanel");
-            const registerPanel = document.getElementById("registerPanel");
-
-            registerPanel.classList.remove("slide-in");
-            loginPanel.classList.remove("slide-out");
-            loginPanel.style.display = "block";
-            registerPanel.style.display = "none";
-        }
-
-        // Login form handling
-        document
-            .getElementById("loginForm")
-            .addEventListener("submit", function (e) {
-                e.preventDefault();
-
-                const username = document.getElementById("loginUsername").value;
-                const password = document.getElementById("loginPassword").value;
-
-                if (username && password) {
-                    showLoading("login");
-
-                    // Simulate API call
-                    setTimeout(() => {
-                        hideLoading("login");
-                        showSuccess("login");
-
-                        // Redirect to main page after 2 seconds
-                        setTimeout(() => {
-                            window.location.href = "/";
-                        }, 2000);
-                    }, 1500);
-                }
-            });
-
-        // Register form handling
-        document
-            .getElementById("registerForm")
-            .addEventListener("submit", function (e) {
-                e.preventDefault();
-
-                const fullName = document.getElementById("registerFullName").value;
-                const email = document.getElementById("registerEmail").value;
-                const password = document.getElementById("registerPassword").value;
-                const confirmPassword =
-                    document.getElementById("confirmPassword").value;
-
-                if (password !== confirmPassword) {
-                    alert("Parollar mos kelmaydi!");
-                    return;
-                }
-
-                if (fullName && email && password) {
-                    showLoading("register");
-
-                    // Simulate API call
-                    setTimeout(() => {
-                        hideLoading("register");
-                        showSuccess("register");
-
-                        // Switch to login after 2 seconds
-                        setTimeout(() => {
-                            switchToLogin();
-                            hideSuccess("register");
-                        }, 2000);
-                    }, 1500);
-                }
-            });
-
-        // Loading functions
-        function showLoading(type) {
-            document.getElementById(type + "Loading").classList.add("show");
-            document.getElementById(type + "Form").style.opacity = "0.3";
-        }
-
-        function hideLoading(type) {
-            document.getElementById(type + "Loading").classList.remove("show");
-            document.getElementById(type + "Form").style.opacity = "1";
-        }
-
-        // Success functions
-        function showSuccess(type) {
-            document.getElementById(type + "Success").classList.add("show");
-            document.getElementById(type + "Form").style.display = "none";
-        }
-
-        function hideSuccess(type) {
-            document.getElementById(type + "Success").classList.remove("show");
-            document.getElementById(type + "Form").style.display = "block";
-        }
-
+        <!-- Main Container -->
+        <div class="auth-container">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="logo-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h1 class="auth-title">Bog'cha Tizimi</h1>
+                <p class="auth-subtitle">Boshqaruv Paneli</p>
+            </div>
+            <!-- Form Container -->
+            <div class="form-container">
+                <!-- Form -->
+                {% block form %}{% endblock %}
+            </div>
+        </div>
+        <script>
         // Forgot password function
         function showForgotPassword() {
             alert(
@@ -826,7 +587,7 @@
                 const loginUsername = document.getElementById("loginUsername");
                 const loginPassword = document.getElementById("loginPassword");
 
-                typeEffect(loginUsername, "Foydalanuvchi nomingizni kiriting");
+                typeEffect(loginUsername, "Telefon raqamingizni kiriting");
                 setTimeout(() => {
                     typeEffect(loginPassword, "Parolingizni kiriting");
                 }, 1000);
@@ -913,7 +674,6 @@
                     this.style.borderColor = "#ff4757";
                 }
             });
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>
