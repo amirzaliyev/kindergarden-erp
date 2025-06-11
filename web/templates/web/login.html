@@ -18,7 +18,7 @@
                 <input type="text"
                        class="form-input"
                        id="loginUsername"
-                       name="username"
+                       name="phone_number"
                        placeholder="Telefon raqamingizni kiriting"
                        required />
                 <i class="fas fa-user input-icon"></i>
@@ -37,7 +37,7 @@
                 <i class="fas fa-lock input-icon"></i>
             </div>
             <div class="remember-me">
-                <input type="checkbox" id="rememberMe" />
+                <input type="checkbox" id="rememberMe" name="remember_me" />
                 <label for="rememberMe">Meni eslab qol</label>
             </div>
             <div class="forgot-password">
@@ -50,7 +50,7 @@
             <div class="switch-form">
                 <p>
                     Hisobingiz yo'qmi?
-                    <a href="" class="switch-btn">Ro'yxatdan o'tish</a>
+                    <a href="{% url 'register' %}" class="switch-btn">Ro'yxatdan o'tish</a>
                 </p>
             </div>
         </form>

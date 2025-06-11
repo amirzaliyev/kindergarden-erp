@@ -1,6 +1,8 @@
 .venv/
 .env
 .idea/
+migrations/
+__pycache__/
 pyrightconfig.json
 .pg_service.conf
 .erp_pgpass
