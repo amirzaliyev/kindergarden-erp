@@ -8,7 +8,7 @@
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style>
         {% block styles %}
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -28,6 +28,7 @@
             overflow: hidden;
             position: relative;
         }
+
 
         /* Animated Background */
         .background-animation {
@@ -516,7 +517,8 @@
                 box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
             }
         }
-            {% endblock styles %}
+
+        {% endblock styles %}
         </style>
     </head>
     <body>
@@ -546,14 +548,8 @@
                 {% block form %}{% endblock %}
             </div>
         </div>
+        {% block script %}{% endblock %}
         <script>
-        // Forgot password function
-        function showForgotPassword() {
-            alert(
-                "Parolni tiklash uchun administrator bilan bog'laning:\nTel: +998 90 123 45 67\nEmail: admin@bogcha.uz",
-            );
-        }
-
         // Add input focus effects
         document.querySelectorAll(".form-input").forEach((input) => {
             input.addEventListener("focus", function () {
@@ -563,35 +559,6 @@
             input.addEventListener("blur", function () {
                 this.parentElement.classList.remove("focused");
             });
-        });
-
-        // Add typing effect for placeholders
-        function typeEffect(element, text, speed = 100) {
-            let i = 0;
-            element.placeholder = "";
-
-            function typeWriter() {
-                if (i < text.length) {
-                    element.placeholder += text.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, speed);
-                }
-            }
-
-            typeWriter();
-        }
-
-        // Initialize typing effects
-        window.addEventListener("load", function () {
-            setTimeout(() => {
-                const loginUsername = document.getElementById("loginUsername");
-                const loginPassword = document.getElementById("loginPassword");
-
-                typeEffect(loginUsername, "Telefon raqamingizni kiriting");
-                setTimeout(() => {
-                    typeEffect(loginPassword, "Parolingizni kiriting");
-                }, 1000);
-            }, 500);
         });
 
         // Add particle effect on button click
@@ -616,64 +583,23 @@
         // Add CSS for ripple effect
         const style = document.createElement("style");
         style.textContent = `
-            .ripple {
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.6);
-                transform: scale(0);
-                animation: ripple-animation 0.6s linear;
-                pointer-events: none;
-            }
-            
-            @keyframes ripple-animation {
-                to {
-                    transform: scale(4);
-                    opacity: 0;
-                }
-            }
-        `;
+          .ripple {
+              position: absolute;
+              border-radius: 50%;
+              background: rgba(255, 255, 255, 0.6);
+              transform: scale(0);
+              animation: ripple-animation 0.6s linear;
+              pointer-events: none;
+          }
+
+          @keyframes ripple-animation {
+              to {
+                  transform: scale(4);
+                  opacity: 0;
+              }
+          }
+      `;
         document.head.appendChild(style);
-
-        // Add real-time validation
-        document
-            .getElementById("registerPassword")
-            .addEventListener("input", function () {
-                const password = this.value;
-                const confirmPassword = document.getElementById("confirmPassword");
-
-                if (password.length < 6) {
-                    this.style.borderColor = "#ff4757";
-                } else {
-                    this.style.borderColor = "#4CAF50";
-                }
-            });
-
-        document
-            .getElementById("confirmPassword")
-            .addEventListener("input", function () {
-                const password = document.getElementById("registerPassword").value;
-                const confirmPassword = this.value;
-
-                if (password !== confirmPassword) {
-                    this.style.borderColor = "#ff4757";
-                } else {
-                    this.style.borderColor = "#4CAF50";
-                }
-            });
-
-        // Add email validation
-        document
-            .getElementById("registerEmail")
-            .addEventListener("input", function () {
-                const email = this.value;
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                if (emailRegex.test(email)) {
-                    this.style.borderColor = "#4CAF50";
-                } else {
-                    this.style.borderColor = "#ff4757";
-                }
-            });
         </script>
     </body>
 </html>

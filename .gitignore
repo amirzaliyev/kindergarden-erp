@@ -7,3 +7,5 @@ pyrightconfig.json
 .pg_service.conf
 .erp_pgpass
 
+test.py
+test.js

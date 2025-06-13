@@ -1,0 +1,144 @@
+{% extends "authentication/base.html" %}
+{% block styles %}
+    {{ block.super }}
+    .form-container {
+        position: relative;
+        height: 500px;
+    }
+    .msg-error {
+        color: red;
+    }
+    li {
+        list-style: none;
+    }
+    .form-error-list {
+        transition: 1s ease-in-out;
+    }
+    .form-error-items {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+    .error-none {
+        visibility: hidden;
+    }
+{% endblock styles %}
+{% block form %}
+    <div class="form-panel login" id="loginPanel">
+        {% if messages %}
+            <ul class="form-error-list" id="errorList">
+                {% for msg in messages %}
+                    <li class="form-error-items">
+                        <span class="msg-error">{{ msg }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form id="loginForm" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user" style="margin-right: 5px"></i>
+                    Telefon raqam
+                </label>
+                <input type="text"
+                       class="form-input"
+                       id="loginUsername"
+                       name="username"
+                       placeholder="Telefon raqamingizni kiriting"
+                       required />
+                <i class="fas fa-user input-icon"></i>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock" style="margin-right: 5px"></i>
+                    Parol
+                </label>
+                <input type="password"
+                       class="form-input"
+                       id="loginPassword"
+                       name="password"
+                       placeholder="Parolingizni kiriting"
+                       required />
+                <i class="fas fa-lock input-icon"></i>
+            </div>
+            <div class="remember-me">
+                <input type="checkbox" id="rememberMe" name="remember_me" />
+                <label for="rememberMe">Meni eslab qol</label>
+            </div>
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Parolni unutdingizmi?</a>
+            </div>
+            <button type="submit" class="btn btn-primary pulse">
+                <i class="fas fa-sign-in-alt" style="margin-right: 8px"></i>
+                Kirish
+            </button>
+            <div class="switch-form">
+                <p>
+                    Hisobingiz yo'qmi?
+                    <a href="{% url 'register' %}" class="switch-btn">Ro'yxatdan o'tish</a>
+                </p>
+            </div>
+        </form>
+    </div>
+{% endblock form %}
+{% block script %}
+    <script>
+    function showForgotPassword() {
+        alert(
+            "Parolni tiklash uchun administrator bilan bog'laning:\nTel: +998 90 123 45 67\nEmail: admin@bogcha.uz",
+        );
+    }
+
+
+    // Add typing effect for placeholders
+    function typeEffect(element, text, speed = 100) {
+        let i = 0;
+        element.placeholder = "";
+
+        function typeWriter() {
+            if (i < text.length) {
+                element.placeholder += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        typeWriter();
+    }
+
+    function typeInputValueEffect(element, text, speed=100) {
+        let i = 0;
+        element.value = "";
+
+        function typeWriter() {
+            if (i < text.length) {
+                element.value += text.charAt(i)
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        typeWriter();
+    }
+
+    // Initialize typing effects
+    window.addEventListener("load", function () {
+        setTimeout(() => {
+            const loginUsername = document.getElementById("loginUsername");
+            const loginPassword = document.getElementById("loginPassword");
+
+            typeInputValueEffect(loginUsername, "+998");
+            setTimeout(() => {
+                typeEffect(loginPassword, "Parolingizni kiriting");
+            }, 1000);
+            setTimeout(() => {
+                const errorList = document.getElementById("errorList")
+                console.log(errorList)
+
+                errorList.classList.add("error-none")
+            }, 1000)
+        }, 500);
+    });
+
+    </script>
+{% endblock %}

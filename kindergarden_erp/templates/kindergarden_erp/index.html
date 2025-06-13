@@ -1,0 +1,1203 @@
+<!doctype html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>O'qituvchi Paneli - Bog'cha Boshqaruv Tizimi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            max-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .teacher-info {
+            text-align: right;
+        }
+
+        .teacher-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .teacher-class {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            overflow-y: auto;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            overflow-y: auto;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 20px 25px;
+            border-bottom: 2px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Students List */
+        .students-list {
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .student-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateX(5px);
+        }
+
+        .student-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .student-age {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .attendance-status {
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            opacity: 0.2;
+        }
+
+        .status-present {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-absent {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-late {
+            background: #ffc107;
+            color: white;
+        }
+
+        .active {
+            opacity: 100%;
+        }
+
+        .status-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Attendance Section */
+        .attendance-date {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .attendance-date h3 {
+            margin-bottom: 5px;
+        }
+
+        .attendance-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .summary-present {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .summary-absent {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .summary-late {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        /* Parents Communication */
+        .parents-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .parent-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .parent-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .parent-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .parent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .parent-details h4 {
+            font-size: 0.95rem;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .parent-child {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .contact-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-phone {
+            background: #28a745;
+            color: white;
+        }
+
+        .contact-message {
+            background: #007bff;
+            color: white;
+        }
+
+        .contact-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Messages */
+        .messages-section {
+            margin-top: 20px;
+        }
+
+        .message-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .message-from {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .message-text {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .right-column {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                height: auto;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .attendance-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar styling */
+        .students-list::-webkit-scrollbar,
+        .parents-list::-webkit-scrollbar,
+        .left-column::-webkit-scrollbar,
+        .right-column::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .students-list::-webkit-scrollbar-thumb,
+        .parents-list::-webkit-scrollbar-thumb,
+        .left-column::-webkit-scrollbar-thumb,
+        .right-column::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .students-list::-webkit-scrollbar-track,
+        .parents-list::-webkit-scrollbar-track,
+        .left-column::-webkit-scrollbar-track,
+        .right-column::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1><i class="fas fa-seedling"></i> Bog'cha</h1>
+                <p>O'qituvchi Paneli</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Bosh Sahifa
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Mening Bolalarim
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Davomat
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-comments"></i>
+                        Ota-onalar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        Dars Rejasi
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        Hisobotlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Sozlamalar
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title">Xush kelibsiz!</h1>
+                <div class="user-info">
+                    <div class="notifications">
+                        <i class="fas fa-bell" style="font-size: 1.5rem; color: #667eea"></i>
+                        <span class="notification-badge">5</span>
+                    </div>
+                    <div class="user-avatar">GK</div>
+                    <div class="teacher-info">
+                        <div class="teacher-name">Gulnora Karimova</div>
+                        <div class="teacher-class">Katta Guruh O'qituvchisi</div>
+                    </div>
+                </div>
+            </header>
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- Quick Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Bugungi Holat
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">{{ children.count }}</div>
+                                    <div class="stat-label">Jami Bolalar</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">22</div>
+                                    <div class="stat-label">Kelganlar</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">2</div>
+                                    <div class="stat-label">Kelmaganlar</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">1</div>
+                                    <div class="stat-label">Kechikkanlar</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Students List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-users"></i>
+                                Mening Bolalarim
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <ul class="students-list" id="studentsList">
+                                <!--     <li class="student-item"> -->
+                                <!--         <div class="student-avatar">{{ child.avatar }}</div> -->
+                                <!--         <div class="student-info"> -->
+                                <!--             <div class="student-name">{{ child.full_name }}</div> -->
+                                <!--             <div class="student-age">{{ child.age }} yosh</div> -->
+                                <!--         </div> -->
+                                <!--         <div class="attendance-status"> -->
+                                <!--             <button -->
+                                <!--                 class="status-btn status-present ${student.status === 'present' ? 'active' : ''}" -->
+                                <!--                 onclick="updateAttendance({{ child.pk }}, 'present')" title="Kelgan"> -->
+                                <!--                 <i class="fas fa-check"></i> -->
+                                <!--             </button> -->
+                                <!--             <button -->
+                                <!--                 class="status-btn status-absent ${student.status === 'absent' ? 'active' : ''}" -->
+                                <!--                 onclick="updateAttendance({{child.pk}}, 'absent')" title="Kelmagan"> -->
+                                <!--                 <i class="fas fa-times"></i> -->
+                                <!--             </button> -->
+                                <!--             <button -->
+                                <!--                 class="status-btn status-late ${student.status === 'late' ? 'active' : ''}" -->
+                                <!--                 onclick="updateAttendance({{child.pk}}, 'late')" title="Kechikkan"> -->
+                                <!--                 <i class="fas fa-clock"></i> -->
+                                <!--             </button> -->
+                                <!--         </div> -->
+                                <!--     </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Attendance Tracking -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-calendar-check"></i>
+                                Bugungi Davomat
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="attendance-date">
+                                <h3 id="currentDate"></h3>
+                                <p>Davomat belgilash</p>
+                            </div>
+                            <div class="attendance-summary">
+                                <div class="summary-item summary-present">
+                                    <div style="font-size: 1.5rem; margin-bottom: 5px">22</div>
+                                    <div>Kelgan</div>
+                                </div>
+                                <div class="summary-item summary-absent">
+                                    <div style="font-size: 1.5rem; margin-bottom: 5px">2</div>
+                                    <div>Kelmagan</div>
+                                </div>
+                                <div class="summary-item summary-late">
+                                    <div style="font-size: 1.5rem; margin-bottom: 5px">1</div>
+                                    <div>Kechikkan</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%">
+                                <i class="fas fa-save"></i>
+                                Davomatni Saqlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Parents Communication -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-users"></i>
+                                Ota-onalar
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="parents-list" id="parentsList">
+                                <!-- Parents will be loaded here -->
+                            </div>
+                            <div style="margin-top: 20px">
+                                <button class="btn btn-success btn-sm" style="width: 100%">
+                                    <i class="fas fa-plus"></i>
+                                    Guruh Xabari Yuborish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Recent Messages -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-comments"></i>
+                                So'nggi Xabarlar
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="messages-section">
+                                <div class="message-item">
+                                    <div class="message-header">
+                                        <span class="message-from">Dilnoza Ahmadova</span>
+                                        <span class="message-time">10:30</span>
+                                    </div>
+                                    <div class="message-text">
+                                        Assalomu alaykum! Bolam bugun biroz kasal, shuning uchun
+                                        bog'chaga keltira olmayman.
+                                    </div>
+                                </div>
+                                <div class="message-item">
+                                    <div class="message-header">
+                                        <span class="message-from">Shoira Karimova</span>
+                                        <span class="message-time">09:15</span>
+                                    </div>
+                                    <div class="message-text">
+                                        Bugun bolani dadasi olib ketadi. Soat 16:00 da keladi.
+                                    </div>
+                                </div>
+                                <div class="message-item">
+                                    <div class="message-header">
+                                        <span class="message-from">Nodira Tosheva</span>
+                                        <span class="message-time">08:45</span>
+                                    </div>
+                                    <div class="message-text">
+                                        Rahmat sizga! Bolam uyda juda xursand, bog'chada o'rgangan
+                                        qo'shig'ini aytib berdi.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-bolt"></i>
+                                Tez Amallar
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; flex-direction: column; gap: 10px">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-camera"></i>
+                                    Kunlik Foto Qo'shish
+                                </button>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    Haftalik Hisobot
+                                </button>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    Tadbirlar Rejasi
+                                </button>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-file-medical"></i>
+                                    Tibbiy Ma'lumotlar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+        {{ students|json_script:"students-data"}}
+    <script>
+        // const students = [
+        //     {
+        //         id: 1,
+        //         name: "Amir Karimov",
+        //         age: "5 yosh",
+        //         status: "present",
+        //         avatar: "AK",
+        //     },
+        //     {
+        //         id: 2,
+        //         name: "Zarina Saidova",
+        //         age: "4 yosh",
+        //         status: "present",
+        //         avatar: "ZS",
+        //     },
+        //     {
+        //         id: 3,
+        //         name: "Jasur Toshev",
+        //         age: "5 yosh",
+        //         status: "absent",
+        //         avatar: "JT",
+        //     },
+        //     {
+        //         id: 4,
+        //         name: "Malika Alimova",
+        //         age: "4 yosh",
+        //         status: "late",
+        //         avatar: "MA",
+        //     },
+        //
+        //     {
+        //         id: 5,
+        //         name: "Bobur Usmonov",
+        //         age: "5 yosh",
+        //         status: "present",
+        //         avatar: "BU",
+        //     },
+        //     {
+        //         id: 6,
+        //         name: "Dilnoza Rahimova",
+        //         age: "4 yosh",
+        //         status: "present",
+        //         avatar: "DR",
+        //     },
+        //     {
+        //         id: 7,
+        //         name: "Sardor Nazarov",
+        //         age: "5 yosh",
+        //         status: "present",
+        //         avatar: "SN",
+        //     },
+        //     {
+        //         id: 8,
+        //         name: "Muhammadali Qodirov",
+        //         age: "4 yosh",
+        //         status: "present",
+        //         avatar: "MQ",
+        //     },
+        //     {
+        //         id: 9,
+        //         name: "Aziza Toshmatova",
+        //         age: "5 yosh",
+        //         status: "present",
+        //         avatar: "AT",
+        //     },
+        //     {
+        //         id: 10,
+        //         name: "Doniyor Olimov",
+        //         age: "4 yosh",
+        //         status: "present",
+        //         avatar: "DO",
+        //     },
+        // ];
+        const parents = [
+            {
+                id: 1,
+                name: "Dilnoza Ahmadova",
+                child: "Amir Karimov",
+                phone: "+998901234567",
+                avatar: "DA",
+            },
+            {
+                id: 2,
+                name: "Shoira Karimova",
+                child: "Zarina Saidova",
+                phone: "+998901234568",
+                avatar: "SK",
+            },
+            {
+                id: 3,
+                name: "Nodira Tosheva",
+                child: "Jasur Toshev",
+                phone: "+998901234569",
+                avatar: "NT",
+            },
+            {
+                id: 4,
+                name: "Gulnora Alimova",
+                child: "Malika Alimova",
+                phone: "+998901234570",
+                avatar: "GA",
+            },
+            {
+                id: 5,
+                name: "Sevara Usmonova",
+                child: "Bobur Usmonov",
+                phone: "+998901234571",
+                avatar: "SU",
+            },
+        ];
+        function loadStudents() {
+            students = JSON.parse(document.getElementById("students-data").textContent);
+            console.log(students)
+            const studentsList = document.getElementById("studentsList");
+            studentsList.innerHTML = "";
+
+            students.forEach((student) => {
+                const studentItem = document.createElement("li");
+                studentItem.className = "student-item";
+                studentItem.innerHTML = `
+            <div class="student-avatar">${student.avatar}</div>
+            <div class="student-info">
+              <div class="student-name">${student.name}</div>
+              <div class="student-age">${student.age} yosh</div>
+            </div>
+            <div class="attendance-status">
+              <button class="status-btn status-present ${student.status === 'present' ? 'active' : ''}" 
+                      onclick="updateAttendance(${student.id}, 'present')" title="Kelgan">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="status-btn status-absent ${student.status === 'absent' ? 'active' : ''}" 
+                      onclick="updateAttendance(${student.id}, 'absent')" title="Kelmagan">
+                <i class="fas fa-times"></i>
+              </button>
+              <button class="status-btn status-late ${student.status === 'late' ? 'active' : ''}" 
+onclick="updateAttendance(${student.id}, 'late')" title="Kechikkan">
+                <i class="fas fa-clock"></i>
+              </button>
+            </div>
+          `;
+                studentsList.appendChild(studentItem);
+            });
+        }
+
+        function loadParents() {
+            const parentsList = document.getElementById("parentsList");
+            parentsList.innerHTML = "";
+
+            parents.forEach((parent) => {
+                const parentItem = document.createElement("div");
+                parentItem.className = "parent-item";
+                parentItem.innerHTML = `
+            <div class="parent-info">
+              <div class="parent-avatar">${parent.avatar}</div>
+              <div class="parent-details">
+                <h4>${parent.name}</h4>
+                <div class="parent-child">${parent.child}</div>
+              </div>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-btn contact-phone" onclick="callParent('${parent.phone}')" title="Qo'ng'iroq qilish">
+                <i class="fas fa-phone"></i>
+              </button>
+              <button class="contact-btn contact-message" onclick="messageParent(${parent.id})" title="Xabar yuborish">
+                <i class="fas fa-comment"></i>
+              </button>
+            </div>
+          `;
+                parentsList.appendChild(parentItem);
+            });
+        }
+
+        // Update attendance status
+        function updateAttendance(studentId, status) {
+            const student = students.find((s) => s.id === studentId);
+            if (student) {
+                student.status = status;
+                console.log(status)
+                loadStudents();
+                updateAttendanceSummary();
+            }
+        }
+
+        // Update attendance summary
+        function updateAttendanceSummary() {
+            const present = students.filter((s) => s.status === "present").length;
+            const absent = students.filter((s) => s.status === "absent").length;
+            const late = students.filter((s) => s.status === "late").length;
+
+            // Update quick stats
+            document.querySelector(".stat-number").textContent = students.length;
+            document.querySelectorAll(".stat-number")[1].textContent = present;
+            document.querySelectorAll(".stat-number")[2].textContent = absent;
+            document.querySelectorAll(".stat-number")[3].textContent = late;
+
+            // Update attendance summary
+            document.querySelector(".summary-present div").textContent = present;
+            document.querySelector(".summary-absent div").textContent = absent;
+            document.querySelector(".summary-late div").textContent = late;
+        }
+
+        // Call parent function
+        function callParent(phone) {
+            alert(`Qo'ng'iroq qilinyapti: ${phone}`);
+            // In real implementation, this would integrate with phone system
+        }
+
+        // Message parent function
+        function messageParent(parentId) {
+            const parent = parents.find((p) => p.id === parentId);
+            if (parent) {
+                alert(`${parent.name}ga xabar yuborilmoqda...`);
+                // In real implementation, this would open messaging interface
+            }
+        }
+
+        // Set current date
+        function setCurrentDate() {
+            const today = new Date();
+            const options = {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            };
+            document.getElementById("currentDate").textContent =
+                today.toLocaleDateString("uz-UZ", options);
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            setCurrentDate();
+            loadParents();
+            loadStudents();
+            updateAttendanceSummary();
+        }
+
+        // Navigation handling
+        document.querySelectorAll(".nav-link").forEach((link) => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                // Remove active class from all links
+                document
+                    .querySelectorAll(".nav-link")
+                    .forEach((l) => l.classList.remove("active"));
+
+                // Add active class to clicked link
+                this.classList.add("active");
+
+                // Here you would typically load different content based on the clicked menu item
+                console.log("Navigating to:", this.textContent.trim());
+            });
+        });
+
+        // Save attendance function
+        document
+            .querySelector(".btn-primary")
+            .addEventListener("click", function () {
+                alert("Davomat muvaffaqiyatli saqlandi!");
+                console.log(
+                    "Attendance saved:",
+                    students.map((s) => ({
+                        id: s.id,
+                        name: s.name,
+                        status: s.status,
+                        date: new Date().toISOString().split("T")[0],
+                    })),
+                );
+            });
+
+        // Group message function
+        document
+            .querySelector(".btn-success")
+            .addEventListener("click", function () {
+                const message = prompt("Guruh uchun xabar kiriting:");
+                if (message) {
+                    alert(`Guruh xabari yuborildi: "${message}"`);
+                    console.log("Group message sent:", message);
+                }
+            });
+
+        // Quick action buttons
+        document.querySelectorAll(".btn-sm").forEach((btn, index) => {
+            btn.addEventListener("click", function () {
+                const actions = [
+                    "Kunlik foto qo'shish",
+                    "Haftalik hisobot",
+                    "Tadbirlar rejasi",
+                    "Tibbiy ma'lumotlar",
+                ];
+
+                if (index < 4) {
+                    alert(`${actions[index]} funksiyasi ishga tushirildi!`);
+                }
+            });
+        });
+
+        // Notification click handler
+        document
+            .querySelector(".notifications")
+            .addEventListener("click", function () {
+                alert(
+                    "5 ta yangi bildirishnoma:\n\n1. Yangi xabar - Dilnoza Ahmadova\n2. Davomat eslatmasi\n3. Haftalik hisobot tayyor\n4. Ota-onalar yig'ilishi\n5. Tibbiy ko'rik eslatmasi",
+                );
+            });
+
+        // Initialize when page loads
+        document.addEventListener("DOMContentLoaded", initDashboard);
+
+        // Auto-refresh data every 5 minutes
+        setInterval(() => {
+            console.log("Auto-refreshing data...");
+            // In real implementation, this would fetch fresh data from server
+        }, 300000);
+    </script>
+</body>
+
+</html>

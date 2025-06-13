@@ -82,9 +82,9 @@ class User(AbstractUser):
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = ["email"]
 
-    # def set_username(self):
-    #     if self.username is None:
-    #         self.username = self.phone_number
+    @property
+    def full_name(self):
+        return self.first_name + " " + self.last_name  # type: ignore
 
     class Meta(AbstractUser.Meta):
         db_table = "auth_user"

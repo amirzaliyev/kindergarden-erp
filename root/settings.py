@@ -32,7 +32,8 @@ ALLOWED_HOSTS = ["localhost"]
 # Application definition
 
 INSTALLED_APPS = [
-    "web.apps.WebConfig",
+    "authentication.apps.AuthenticationConfig",
+    "kindergarden_erp.apps.KindergardenErpConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "kindergarden_erp.urls"
+ROOT_URLCONF = "root.urls"
 
 TEMPLATES = [
     {
@@ -68,11 +69,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "kindergarden_erp.wsgi.application"
+WSGI_APPLICATION = "root.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 os.environ["PGSERVICEFILE"] = str(Path(BASE_DIR, ".pg_service.conf"))
 
 DATABASES = {
@@ -84,10 +84,10 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = "web.User"
+AUTH_USER_MODEL = "authentication.User"
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "accounts/login/"
+SESSION_COOKIE_AGE = 1209600
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Tashkent"
 
 USE_I18N = True
 
